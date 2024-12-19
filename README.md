@@ -7,7 +7,7 @@ A aplicação **Literalura** é uma aplicação Java com Spring Boot que gerenci
 - **Java 17**
 - **Spring Boot**
 - **JPA (Hibernate)**
-- **MySQL** (ou outro banco de dados relacional)
+- **PostgreSQL** 
 - **Maven** (para gerenciamento de dependências)
 
 ## Funcionalidades
