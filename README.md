@@ -1,2 +1,18 @@
-# literalura
-Uma aplicação que visa integrar banco de dados com a função de consumir API de uma biblioteca virtual
+# Literalura
+
+A aplicação **Literalura** é uma aplicação Java com Spring Boot que gerencia livros e seus autores. O projeto permite o cadastro, busca e exibição de livros, assim como a inclusão de autores associados aos livros.
+
+## Tecnologias Utilizadas
+
+- **Java 17**
+- **Spring Boot**
+- **JPA (Hibernate)**
+- **MySQL** (ou outro banco de dados relacional)
+- **Maven** (para gerenciamento de dependências)
+
+## Funcionalidades
+
+- Cadastro de livros
+- Associação de autores aos livros
+- Exibição dos livros e seus autores
+- Busca por livros e autores
