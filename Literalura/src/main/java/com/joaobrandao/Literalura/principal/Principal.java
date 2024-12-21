@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
@@ -103,14 +104,15 @@ public class Principal {
         var idiomaEscolhido = opcoesIdioma();
 
         livroRepository.findAll().stream()
-                .filter(livro -> livro.getIdioma().equals(idiomaEscolhido))
+                .filter(livro -> livro.getIdioma() != null && livro.getIdioma().contains(idiomaEscolhido))
                 .forEach(livro -> {
                     String nomesAutores = livro.getAutores().stream()
                             .map(Autor::getNome)
                             .collect(Collectors.joining(", "));
-                    System.out.println("O livro " + livro.getTitulo() + " de " + livro.getAutor());
+                    System.out.println("O livro " + livro.getTitulo() + " de " + nomesAutores);
                 });
     }
+
 
     public String opcoesIdioma(){
         System.out.println("""
@@ -168,7 +170,7 @@ public class Principal {
     }
 
     private void listarLivrosSalvos() {
-        System.out.println("Teste");
+
         List<Livro> livros = livroRepository.findAll();
 
         if (livros.isEmpty()) {
@@ -195,7 +197,7 @@ public class Principal {
 
             tituloDaObra = formatarTituloObra(tituloDaObra);
 
-            var endereco = "https://gutendex.com/books/?search=" + tituloDaObra;
+            var endereco = "https://gutendex.com/books/?search="+tituloDaObra;
             var json = consumoApi.obterDados(endereco);
 
             DadosResultado resultado = converteDados.obterDados(json, DadosResultado.class);
@@ -204,7 +206,7 @@ public class Principal {
             salvarLivro(resultado);
         }
         catch (DataIntegrityViolationException e){
-            System.out.println("Um dos resultados apresentou um nome muito longo! ");
+            System.out.println("Um dos resultados apresentou um nome muito longo! ou algum registro está nulo");
         }
 
     }
@@ -214,20 +216,26 @@ public class Principal {
             m.autores().forEach(autor -> {
                 var nomeAutor = autor.nome();
 
-                boolean livroExiste = livroRepository.existsByTitulo(
-                        m.titulo());
-
+                boolean livroExiste = livroRepository.existsByTitulo(m.titulo());
                 boolean autorExiste = autorRepository.existsByNome(autor.nome());
-                if(!autorExiste){
-                    Autor novoAutor = new Autor(nomeAutor ,autor.anoNascimento(),autor.anoFalecimento());
-                    novoAutor.setLivro(m.titulo());
-                    autorRepository.save(novoAutor);
-                   // autorRepository.save(new Autor(nomeAutor ,autor.anoNascimento(),autor.anoFalecimento() ));
-                }
 
                 if (!livroExiste) {
-                    livroRepository.save(new Livro(m.titulo(), nomeAutor, m.idioma()));
+                    List<Autor> novosAutores = new ArrayList<>();
+                    Autor novoAutor = new Autor(autor.nome(), autor.anoNascimento(), autor.anoFalecimento());
+                    novosAutores.add(novoAutor);
+
+                    Livro novoLivro = new Livro(m.titulo(), nomeAutor, m.idioma());
+                    novoLivro.setAutores(novosAutores);
+                    livroRepository.save(novoLivro);
+
+                    if (!autorExiste) {
+                        autorRepository.save(novoAutor);
+                    }
+                } else if (!autorExiste) {
+                    Autor novoAutor = new Autor(autor.nome(), autor.anoNascimento(), autor.anoFalecimento());
+                    autorRepository.save(novoAutor);
                 }
+
 
             });
         });

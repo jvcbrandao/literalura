@@ -3,6 +3,7 @@ package com.joaobrandao.Literalura.model;
 import jakarta.persistence.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Entity
 public class Livro {
@@ -10,30 +11,30 @@ public class Livro {
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
         private Long id;
-        @Column(name = "titulo", nullable = false)
         private String titulo;
-        @Column(name = "autor", nullable = false)
         private String autor;
-        @Transient
-        private List<String> idioma;
+        private String idioma;
         @OneToMany(mappedBy = "livro", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
         private List<Autor> autores;
 
-
-        public Livro() {
-        }
-
-
+        public Livro() {}
 
         public Livro(String titulo, String autor) {
                 this.titulo =titulo;
                 this.autor=autor;
         }
 
-        public Livro(String titulo, String nome, List<String> idioma) {
+        public Livro(String titulo, String nome, String idioma) {
                 this.titulo=titulo;
                 this.autor=nome;
                 this.idioma=idioma;
+        }
+
+        public Livro(String titulo, String nomeAutor, List<String> idioma) {
+                this.titulo=titulo;
+                this.autor=nomeAutor;
+                this.idioma = idioma.stream().collect(Collectors.joining(","));
+
         }
 
         // Getters e setters
@@ -59,8 +60,26 @@ public class Livro {
         }
 
         public void setAutores(List<Autor> autores) {
-                autores.forEach(autor->autor.setLivro(this));
+
                 this.autores = autores;
+
+                autores.forEach(a->a.setLivro(this));
+
+
+//                public void setEpisodios(List<Episodio> episodios) {
+//                        this.episodios = episodios;
+//                        episodios.forEach(e -> e.setSerie(this));/esse comando e para ter uma interacao
+//                        reversa e falando para o episodio a qual serie ele pertence/
+//                }
+//
+//
+
+
+
+
+
+
+
         }
 
         public String getAutor() {
@@ -71,12 +90,11 @@ public class Livro {
                 this.autor = autor;
         }
 
-        public List<String> getIdioma() {
+        public String getIdioma() {
                 return idioma;
         }
 
-        public void setIdioma(List<String> idioma) {
+        public void setIdioma(String idioma) {
                 this.idioma = idioma;
         }
-
 }
