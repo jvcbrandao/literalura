@@ -243,13 +243,15 @@ public class Principal {
 
 
     private void exibirInformacaoAutor(DadosResultado resultado) {
-        resultado.livro().stream().forEach(m -> {
-            m.autores().forEach(autor -> {
-                System.out.println("O nome do livro é " + m.titulo() + " e o autor é "
+        resultado.livro().forEach(livro -> {
+            livro.autores().forEach(autor -> {
+                int anoFalecimento = (autor.anoFalecimento() != null) ? autor.anoFalecimento() : 2100;
+                System.out.println("O nome do livro é " + livro.titulo() + " e o autor é "
                         + autor.nome());
             });
         });
     }
+
 
     private String formatarTituloObra(String tituloDaObra) {
         return tituloDaObra.trim().replace(" ","%20").toLowerCase();

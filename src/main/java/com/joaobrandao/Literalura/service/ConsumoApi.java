@@ -9,7 +9,6 @@ import java.net.http.HttpResponse;
 public class ConsumoApi {
 
     public String obterDados(String endereco) {
-        System.out.println(endereco);
 
         HttpClient client = HttpClient.newHttpClient();
         HttpRequest request = HttpRequest.newBuilder()

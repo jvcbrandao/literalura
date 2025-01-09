@@ -18,11 +18,12 @@
 
         public Autor() {}
 
-        public Autor(String nome, Integer anoDeNascimento, Integer anoDeFalecimento){
-            this.nome=nome;
-            this.anoDeFalecimento=anoDeFalecimento;
-            this.anoDeNascimento=anoDeNascimento;
+        public Autor(String nome, Integer anoDeNascimento, Integer anoDeFalecimento) {
+            this.nome = nome;
+            this.anoDeNascimento = (anoDeNascimento != null) ? anoDeNascimento : 0; // Use um valor padrão se for null
+            this.anoDeFalecimento = (anoDeFalecimento != null) ? anoDeFalecimento : 2100; // Use um valor padrão se for null
         }
+
 
 
 
